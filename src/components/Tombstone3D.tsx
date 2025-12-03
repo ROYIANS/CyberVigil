@@ -15,28 +15,20 @@ interface Tombstone3DProps {
 function TombstoneModel({ grave, isNight }: { grave: Grave; isNight: boolean }) {
   const meshRef = useRef<THREE.Mesh>(null);
 
-  // 创建墓碑形状（圆顶矩形碑）- 使用贝塞尔曲线更直观
+  // 创建墓碑形状（圆顶矩形碑）- 使用圆弧绘制更圆润的顶部
   const shape = useMemo(() => {
     const shape = new THREE.Shape();
     const width = 2.2;
-    const height = 3.8;
-    const topRadius = width / 2; // 圆弧半径
+    const height = 3.2;
+    const arcHeight = 0.8; // 圆弧的高度
 
-    // 从左下角开始，逆时针绘制外轮廓
+    // 从左下角开始绘制
     shape.moveTo(-width/2, 0);
-    // 左边竖线到圆弧起点
-    shape.lineTo(-width/2, height - topRadius);
+    // 左边竖线
+    shape.lineTo(-width/2, height);
 
-    // 方法B：用二次贝塞尔曲线画圆顶（更直观可控）
-    // 控制点在顶部中心上方，形成自然的圆弧
-    shape.quadraticCurveTo(
-      -width/2, height + topRadius * 0.2,  // 控制点：左上
-      0, height                              // 终点：顶部中心
-    );
-    shape.quadraticCurveTo(
-      width/2, height + topRadius * 0.2,   // 控制点：右上
-      width/2, height - topRadius          // 终点：右侧圆弧起点
-    );
+    // 使用圆弧绘制圆润的顶部
+    shape.absarc(0, height, width/2, Math.PI, 0, true);
 
     // 右边竖线
     shape.lineTo(width/2, 0);
@@ -83,46 +75,19 @@ function TombstoneModel({ grave, isNight }: { grave: Grave; isNight: boolean }) 
 
   return (
     <group>
-      {/* 墓碑主体 */}
-      <mesh ref={meshRef} castShadow receiveShadow>
+      {/* 墓碑主体 - 向后偏移使正面在z=0 */}
+      <mesh ref={meshRef} castShadow receiveShadow position={[0, 0, -0.15]}>
         <extrudeGeometry args={[shape, extrudeSettings]} />
         <primitive object={stoneMaterial} attach="material" />
       </mesh>
 
-      {/* ===== 墓碑文字 - 阴刻效果 ===== */}
+      {/* ===== 墓碑文字 - 竖排阴刻效果 ===== */}
 
-      {/* 墓主名称 - 阴影层（凹陷效果） */}
+      {/* R.I.P - 阴影层（横排保持不变） */}
       <Text
-        position={[0, 2.5, 0.145]}
-        fontSize={0.28}
-        color="#1c1917"
-        anchorX="center"
-        anchorY="middle"
-        letterSpacing={0.05}
-        lineHeight={1.3}
-        maxWidth={1.4}
-      >
-        {`${grave.title}\n之墓`}
-      </Text>
-      {/* 墓主名称 - 主文字 */}
-      <Text
-        position={[0, 2.5, 0.16]}
-        fontSize={0.28}
-        color={isNight ? "#c7d7ff" : "#f5f5f4"}
-        anchorX="center"
-        anchorY="middle"
-        letterSpacing={0.05}
-        lineHeight={1.3}
-        maxWidth={1.4}
-      >
-        {`${grave.title}\n之墓`}
-      </Text>
-
-      {/* R.I.P - 阴影层 */}
-      <Text
-        position={[0, 3.6, 0.145]}
-        fontSize={0.11}
-        color="#1c1917"
+        position={[0, 4, 0.21]}
+        fontSize={0.15}
+        color="#000000"
         anchorX="center"
         anchorY="middle"
       >
@@ -130,59 +95,133 @@ function TombstoneModel({ grave, isNight }: { grave: Grave; isNight: boolean }) 
       </Text>
       {/* R.I.P - 主文字 */}
       <Text
-        position={[0, 3.6, 0.16]}
-        fontSize={0.11}
-        color="#a8a29e"
+        position={[0, 4, 0.215]}
+        fontSize={0.15}
+        color="#787476"
         anchorX="center"
         anchorY="middle"
       >
         R.I.P
       </Text>
 
-      {/* 生卒年 - 阴影层 */}
+      {/* 墓主名称 - 竖排（每个字一行） */}
       <Text
-        position={[-0.75, 2.2, 0.145]}
-        fontSize={0.06}
-        color="#1c1917"
+        position={[0, 2.2, 0.21]}
+        fontSize={0.38}
+        color="#000000"
         anchorX="center"
         anchorY="middle"
-        lineHeight={2}
+        lineHeight={1.1}
+        textAlign="center"
       >
-        {`生于\n${grave.bornDate || '未知'}\n\n卒于\n${grave.deathDate || '未知'}`}
+        {`${grave.title.split('').join('\n')}\n之\n墓`}
       </Text>
-      {/* 生卒年 - 主文字 */}
       <Text
-        position={[-0.75, 2.2, 0.16]}
-        fontSize={0.06}
-        color="#a8a29e"
+        position={[0, 2.2, 0.215]}
+        fontSize={0.38}
+        color={isNight ? "#e0e7ff" : "#ffffff"}
         anchorX="center"
         anchorY="middle"
-        lineHeight={2}
+        lineHeight={1.1}
+        textAlign="center"
       >
-        {`生于\n${grave.bornDate || '未知'}\n\n卒于\n${grave.deathDate || '未知'}`}
+        {`${grave.title.split('').join('\n')}\n之\n墓`}
       </Text>
 
-      {/* 立碑人 - 阴影层 */}
+      {/* 生卒年 - 竖排（左侧） */}
       <Text
-        position={[0.75, 1.8, 0.145]}
-        fontSize={0.06}
-        color="#1c1917"
+        position={[-0.75, 2.0, 0.21]}
+        fontSize={0.1}
+        color="#000000"
         anchorX="center"
         anchorY="middle"
-        lineHeight={2}
+        lineHeight={1.2}
+        textAlign="center"
       >
-        {grave.erector ? `${grave.erector}\n立\n\n` : ''}{grave.createDate}
+        {`生\n于\n${(grave.bornDate || '未知').split('').join('\n')}`}
       </Text>
-      {/* 立碑人 - 主文字 */}
       <Text
-        position={[0.75, 1.8, 0.16]}
-        fontSize={0.06}
-        color="#a8a29e"
+        position={[-0.75, 2.0, 0.215]}
+        fontSize={0.1}
+        color="#787476"
         anchorX="center"
         anchorY="middle"
-        lineHeight={2}
+        lineHeight={1.2}
+        textAlign="center"
       >
-        {grave.erector ? `${grave.erector}\n立\n\n` : ''}{grave.createDate}
+        {`生\n于\n${(grave.bornDate || '未知').split('').join('\n')}`}
+      </Text>
+
+      {/* 卒年 - 竖排（左侧偏下） */}
+      <Text
+        position={[-0.55, 2.0, 0.21]}
+        fontSize={0.1}
+        color="#000000"
+        anchorX="center"
+        anchorY="middle"
+        lineHeight={1.2}
+        textAlign="center"
+      >
+        {`卒\n于\n${(grave.deathDate || '未知').split('').join('\n')}`}
+      </Text>
+      <Text
+        position={[-0.55, 2.0, 0.215]}
+        fontSize={0.1}
+        color="#787476"
+        anchorX="center"
+        anchorY="middle"
+        lineHeight={1.2}
+        textAlign="center"
+      >
+        {`卒\n于\n${(grave.deathDate || '未知').split('').join('\n')}`}
+      </Text>
+
+      {/* 立碑人和日期 - 竖排（右侧） */}
+      <Text
+        position={[0.65, 2.0, 0.21]}
+        fontSize={0.1}
+        color="#000000"
+        anchorX="center"
+        anchorY="middle"
+        lineHeight={1.2}
+        textAlign="center"
+      >
+        {grave.erector ? `${grave.erector.split('').join('\n')}\n立` : ''}
+      </Text>
+      <Text
+        position={[0.65, 2.0, 0.215]}
+        fontSize={0.1}
+        color="#787476"
+        anchorX="center"
+        anchorY="middle"
+        lineHeight={1.2}
+        textAlign="center"
+      >
+        {grave.erector ? `${grave.erector.split('').join('\n')}\n立` : ''}
+      </Text>
+
+      {/* 立碑日期 - 竖排（右侧） */}
+      <Text
+        position={[0.85, 2.0, 0.21]}
+        fontSize={0.1}
+        color="#000000"
+        anchorX="center"
+        anchorY="middle"
+        lineHeight={1.2}
+        textAlign="center"
+      >
+        {(grave.createDate || '').split('').join('\n')}
+      </Text>
+      <Text
+        position={[0.85, 2.0, 0.215]}
+        fontSize={0.1}
+        color="#787476"
+        anchorX="center"
+        anchorY="middle"
+        lineHeight={1.2}
+        textAlign="center"
+      >
+        {(grave.createDate || '').split('').join('\n')}
       </Text>
 
       {/* 墓座 */}
@@ -214,7 +253,7 @@ function createStoneTexture(): HTMLCanvasElement {
   const ctx = canvas.getContext('2d')!;
 
   // 基础灰色
-  ctx.fillStyle = '#292524';
+  ctx.fillStyle = '#101010';
   ctx.fillRect(0, 0, 256, 256);
 
   // 添加噪点纹理
