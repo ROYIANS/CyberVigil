@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import Atmosphere, { WeatherType } from './components/Atmosphere';
 import Entrance from './components/Entrance';
 import RitualProcess from './components/RitualProcess';

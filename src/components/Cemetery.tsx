@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronLeft, ChevronRight, PenTool, Flower, Flame, Droplets, Sprout, Mail, Settings, Ghost } from 'lucide-react';
+import { ChevronLeft, ChevronRight, PenTool, Flower, Flame, Droplets, Mail, Settings, Ghost } from 'lucide-react';
 import OfferingBtn from './OfferingBtn';
 import Tombstone3D from './Tombstone3D';
 import { Grave } from '../App';

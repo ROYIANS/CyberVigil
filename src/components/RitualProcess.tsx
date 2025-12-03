@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { X, Archive, Shovel, Box, MoveDown } from 'lucide-react';
 
 interface RitualProcessProps {
@@ -18,8 +18,6 @@ const RitualProcess: React.FC<RitualProcessProps> = ({ onComplete, onCancel }) =
   
   const [progress, setProgress] = useState(0); // 用于挖掘和掩土
   const [isShaking, setIsShaking] = useState(false);
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const containerRef = useRef(null);
 
   // 震动反馈
   const triggerShake = () => {

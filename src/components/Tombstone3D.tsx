@@ -1,4 +1,4 @@
-import React, { useRef, useMemo } from 'react';
+import { useRef, useMemo } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import { Text, OrbitControls, Environment } from '@react-three/drei';
 import * as THREE from 'three';
@@ -20,7 +20,6 @@ function TombstoneModel({ grave, isNight }: { grave: Grave; isNight: boolean }) 
     const shape = new THREE.Shape();
     const width = 2.2;
     const height = 3.2;
-    const arcHeight = 0.8; // 圆弧的高度
 
     // 从左下角开始绘制
     shape.moveTo(-width/2, 0);
