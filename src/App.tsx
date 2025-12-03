@@ -50,10 +50,10 @@ const INITIAL_GRAVES: Grave[] = [
     id: 1,
     title: "被偷走的夏天",
     content: "那年本来约好要去海边的，结果我们在路口就走散了。夏天结束了，我也该长大了。",
-    bornDate: "2000.06.01",
-    deathDate: "2023.08.31",
+    bornDate: "二零零零年六月一日",
+    deathDate: "二零二三年八月三十一日",
     erector: "某某",
-    createDate: "2023.08.31",
+    createDate: "二零二三年八月三十一日",
     lastVisit: Date.now(),
     offerings: [],
     savedLetters: []
@@ -132,11 +132,72 @@ export default function App() {
     return () => clearInterval(interval);
   }, [currentIdx]); // Re-run when switching graves
 
+  // 将日期转换为中文格式
+  const formatChineseDate = (dateStr: string): string => {
+    if (!dateStr) return '';
+
+    const chineseNumbers: { [key: string]: string } = {
+      '0': '零', '1': '一', '2': '二', '3': '三', '4': '四',
+      '5': '五', '6': '六', '7': '七', '8': '八', '9': '九'
+    };
+
+    // dateStr 格式: YYYY-MM-DD
+    const parts = dateStr.split('-');
+    if (parts.length !== 3) return dateStr;
+
+    const [year, month, day] = parts;
+
+    // 转换年份
+    let yearChinese = '';
+    for (let char of year) {
+      yearChinese += chineseNumbers[char] || char;
+    }
+    yearChinese += '年';
+
+    // 转换月份
+    const monthNum = parseInt(month);
+    let monthChinese = '';
+    if (monthNum === 10) {
+      monthChinese = '十月';
+    } else if (monthNum > 10) {
+      const lastDigit = monthNum % 10;
+      monthChinese = '十' + chineseNumbers[lastDigit.toString()] + '月';
+    } else {
+      monthChinese = chineseNumbers[monthNum.toString()] + '月';
+    }
+
+    // 转换日期
+    const dayNum = parseInt(day);
+    let dayChinese = '';
+    if (dayNum === 10) {
+      dayChinese = '十日';
+    } else if (dayNum < 10) {
+      dayChinese = chineseNumbers[dayNum.toString()] + '日';
+    } else if (dayNum < 20) {
+      const lastDigit = dayNum % 10;
+      dayChinese = '十' + (lastDigit === 0 ? '' : chineseNumbers[lastDigit.toString()]) + '日';
+    } else if (dayNum === 20) {
+      dayChinese = '二十日';
+    } else if (dayNum === 30) {
+      dayChinese = '三十日';
+    } else if (dayNum < 30) {
+      const lastDigit = dayNum % 10;
+      dayChinese = '二十' + chineseNumbers[lastDigit.toString()] + '日';
+    } else {
+      const lastDigit = dayNum % 10;
+      dayChinese = '三十' + (lastDigit === 0 ? '' : chineseNumbers[lastDigit.toString()]) + '日';
+    }
+
+    return yearChinese + monthChinese + dayChinese;
+  };
+
   const handleCreateGrave = (data: { title: string; content: string; bornDate: string; deathDate: string; erector: string }) => {
     const newGrave: Grave = {
       id: Date.now(),
       ...data,
-      createDate: new Date().toLocaleDateString(),
+      bornDate: formatChineseDate(data.bornDate),
+      deathDate: formatChineseDate(data.deathDate),
+      createDate: formatChineseDate(new Date().toISOString().split('T')[0]),
       lastVisit: Date.now(),
       offerings: [],
       savedLetters: []

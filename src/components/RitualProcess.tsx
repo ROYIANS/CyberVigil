@@ -188,59 +188,71 @@ const RitualProcess: React.FC<RitualProcessProps> = ({ onComplete, onCancel }) =
 
       {/* --- Step 5: 刻碑 (Carve) --- */}
       {step === 5 && (
-        <div className="w-full max-w-md space-y-8 animate-fade-in">
-          <div className="text-center">
-            <h2 className="text-xl text-stone-200">最后一步：刻碑</h2>
-            <p className="text-xs text-stone-500 mt-2">为这段记忆刻下一个名字。</p>
+        <div className="w-full max-w-md space-y-6 animate-fade-in">
+          <div className="text-center space-y-2">
+            <h2 className="text-2xl text-stone-200 tracking-widest">最后一步：刻碑</h2>
+            <p className="text-xs text-stone-500">为这段记忆刻下一个名字</p>
           </div>
 
-          <div className="relative w-full flex justify-center py-8">
-             <div className="w-56 h-72 bg-stone-800 rounded-t-full border border-stone-700 flex flex-col items-center pt-16 px-6 relative shadow-2xl">
-                <span className="text-stone-500 text-xs mb-4">R.I.P</span>
-                <input 
-                  type="text"
-                  maxLength={10}
-                  placeholder="未命名"
-                  value={title}
-                  onChange={e => setTitle(e.target.value)}
-                  className="w-full bg-transparent text-center text-xl text-stone-200 placeholder:text-stone-600 outline-none border-b border-stone-600/50 pb-2 focus:border-stone-400 transition-colors font-serif-sc"
-                  autoFocus
+          <div className="space-y-4 bg-stone-900/30 border border-stone-800 rounded-lg p-6">
+            {/* 墓主名称 */}
+            <div className="space-y-2">
+              <label className="text-xs text-stone-500 tracking-wider">墓主名称</label>
+              <input
+                type="text"
+                maxLength={10}
+                placeholder="未命名"
+                value={title}
+                onChange={e => setTitle(e.target.value)}
+                className="w-full bg-stone-900/50 border border-stone-700 rounded px-4 py-3 text-stone-200 placeholder:text-stone-600 outline-none focus:border-stone-500 transition-colors"
+                autoFocus
+              />
+            </div>
+
+            {/* 生卒日期 */}
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="text-xs text-stone-500 tracking-wider">生于</label>
+                <input
+                  type="date"
+                  value={bornDate}
+                  onChange={e => setBornDate(e.target.value)}
+                  className="w-full bg-stone-900/50 border border-stone-700 rounded px-3 py-2 text-stone-400 outline-none focus:border-stone-500 transition-colors text-sm"
                 />
-                
-                <div className="w-full mt-8 space-y-4 px-4">
-                  <div className="flex gap-2">
-                    <input 
-                      type="text"
-                      placeholder="生于 (YYYY.MM.DD)"
-                      value={bornDate}
-                      onChange={e => setBornDate(e.target.value)}
-                      className="w-1/2 bg-transparent text-center text-xs text-stone-400 placeholder:text-stone-700 outline-none border-b border-stone-700 pb-1"
-                    />
-                    <input 
-                      type="text"
-                      placeholder="卒于 (YYYY.MM.DD)"
-                      value={deathDate}
-                      onChange={e => setDeathDate(e.target.value)}
-                      className="w-1/2 bg-transparent text-center text-xs text-stone-400 placeholder:text-stone-700 outline-none border-b border-stone-700 pb-1"
-                    />
-                  </div>
-                  <input 
-                    type="text"
-                    placeholder="立碑人"
-                    value={erector}
-                    onChange={e => setErector(e.target.value)}
-                    className="w-full bg-transparent text-center text-xs text-stone-400 placeholder:text-stone-700 outline-none border-b border-stone-700 pb-1"
-                  />
-                </div>
+              </div>
+              <div className="space-y-2">
+                <label className="text-xs text-stone-500 tracking-wider">卒于</label>
+                <input
+                  type="date"
+                  value={deathDate}
+                  onChange={e => setDeathDate(e.target.value)}
+                  className="w-full bg-stone-900/50 border border-stone-700 rounded px-3 py-2 text-stone-400 outline-none focus:border-stone-500 transition-colors text-sm"
+                />
+              </div>
+            </div>
 
-                <div className="mt-auto text-[10px] text-stone-600 pb-4">{new Date().toLocaleDateString()}</div>
-             </div>
+            {/* 立碑人 */}
+            <div className="space-y-2">
+              <label className="text-xs text-stone-500 tracking-wider">立碑人</label>
+              <input
+                type="text"
+                placeholder="立碑人（可选）"
+                value={erector}
+                onChange={e => setErector(e.target.value)}
+                className="w-full bg-stone-900/50 border border-stone-700 rounded px-4 py-3 text-stone-200 placeholder:text-stone-600 outline-none focus:border-stone-500 transition-colors"
+              />
+            </div>
+
+            {/* 立碑日期提示 */}
+            <div className="text-center pt-2">
+              <span className="text-[10px] text-stone-600">立碑日期：{new Date().toLocaleDateString()}</span>
+            </div>
           </div>
 
-          <button 
+          <button
             onClick={() => onComplete({ title, content, bornDate, deathDate, erector })}
             disabled={!title.trim()}
-            className="w-full py-4 bg-stone-200 text-stone-900 font-bold tracking-widest hover:bg-white transition-colors rounded-sm"
+            className="w-full py-4 bg-stone-200 text-stone-900 font-bold tracking-widest hover:bg-white transition-colors rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             礼成，安息
           </button>

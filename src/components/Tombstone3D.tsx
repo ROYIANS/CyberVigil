@@ -90,6 +90,7 @@ function TombstoneModel({ grave, isNight }: { grave: Grave; isNight: boolean }) 
         color="#000000"
         anchorX="center"
         anchorY="middle"
+        font="/fonts/JLiSu.woff"
       >
         R.I.P
       </Text>
@@ -100,6 +101,7 @@ function TombstoneModel({ grave, isNight }: { grave: Grave; isNight: boolean }) 
         color="#787476"
         anchorX="center"
         anchorY="middle"
+        font="/fonts/JLiSu.woff"
       >
         R.I.P
       </Text>
@@ -113,6 +115,7 @@ function TombstoneModel({ grave, isNight }: { grave: Grave; isNight: boolean }) 
         anchorY="middle"
         lineHeight={1.1}
         textAlign="center"
+        font="/fonts/JLiSu.woff"
       >
         {`${grave.title.split('').join('\n')}\n之\n墓`}
       </Text>
@@ -124,6 +127,7 @@ function TombstoneModel({ grave, isNight }: { grave: Grave; isNight: boolean }) 
         anchorY="middle"
         lineHeight={1.1}
         textAlign="center"
+        font="/fonts/JLiSu.woff"
       >
         {`${grave.title.split('').join('\n')}\n之\n墓`}
       </Text>
@@ -137,6 +141,7 @@ function TombstoneModel({ grave, isNight }: { grave: Grave; isNight: boolean }) 
         anchorY="middle"
         lineHeight={1.2}
         textAlign="center"
+        font="/fonts/JLiSu.woff"
       >
         {`生\n于\n${(grave.bornDate || '未知').split('').join('\n')}`}
       </Text>
@@ -148,6 +153,7 @@ function TombstoneModel({ grave, isNight }: { grave: Grave; isNight: boolean }) 
         anchorY="middle"
         lineHeight={1.2}
         textAlign="center"
+        font="/fonts/JLiSu.woff"
       >
         {`生\n于\n${(grave.bornDate || '未知').split('').join('\n')}`}
       </Text>
@@ -161,6 +167,7 @@ function TombstoneModel({ grave, isNight }: { grave: Grave; isNight: boolean }) 
         anchorY="middle"
         lineHeight={1.2}
         textAlign="center"
+        font="/fonts/JLiSu.woff"
       >
         {`卒\n于\n${(grave.deathDate || '未知').split('').join('\n')}`}
       </Text>
@@ -172,6 +179,7 @@ function TombstoneModel({ grave, isNight }: { grave: Grave; isNight: boolean }) 
         anchorY="middle"
         lineHeight={1.2}
         textAlign="center"
+        font="/fonts/JLiSu.woff"
       >
         {`卒\n于\n${(grave.deathDate || '未知').split('').join('\n')}`}
       </Text>
@@ -185,6 +193,7 @@ function TombstoneModel({ grave, isNight }: { grave: Grave; isNight: boolean }) 
         anchorY="middle"
         lineHeight={1.2}
         textAlign="center"
+        font="/fonts/JLiSu.woff"
       >
         {grave.erector ? `${grave.erector.split('').join('\n')}\n立` : ''}
       </Text>
@@ -196,6 +205,7 @@ function TombstoneModel({ grave, isNight }: { grave: Grave; isNight: boolean }) 
         anchorY="middle"
         lineHeight={1.2}
         textAlign="center"
+        font="/fonts/JLiSu.woff"
       >
         {grave.erector ? `${grave.erector.split('').join('\n')}\n立` : ''}
       </Text>
@@ -209,6 +219,7 @@ function TombstoneModel({ grave, isNight }: { grave: Grave; isNight: boolean }) 
         anchorY="middle"
         lineHeight={1.2}
         textAlign="center"
+        font="/fonts/JLiSu.woff"
       >
         {(grave.createDate || '').split('').join('\n')}
       </Text>
@@ -220,6 +231,7 @@ function TombstoneModel({ grave, isNight }: { grave: Grave; isNight: boolean }) 
         anchorY="middle"
         lineHeight={1.2}
         textAlign="center"
+        font="/fonts/JLiSu.woff"
       >
         {(grave.createDate || '').split('').join('\n')}
       </Text>
