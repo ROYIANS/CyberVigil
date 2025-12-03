@@ -74,3 +74,23 @@
     animation: sway 4s ease-in-out infinite reverse;
   }
 }
+
+  /* 雾气流动 */
+  @keyframes fogFlow {
+    0% { transform: translateX(-10%) translateY(0); opacity: 0.3; }
+    50% { opacity: 0.6; }
+    100% { transform: translateX(10%) translateY(-20px); opacity: 0.3; }
+  }
+  .animate-fog {
+    animation: fogFlow 10s ease-in-out infinite alternate;
+  }
+
+  /* 萤火虫/光点 */
+  @keyframes fireflyMove {
+    0% { transform: translate(0, 0) scale(1); opacity: 0; }
+    50% { opacity: 1; }
+    100% { transform: translate(20px, -40px) scale(0.5); opacity: 0; }
+  }
+  .animate-firefly {
+    animation: fireflyMove 4s ease-out infinite;
+  }

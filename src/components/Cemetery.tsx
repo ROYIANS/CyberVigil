@@ -1,5 +1,5 @@
 import React from 'react';
-import { ChevronLeft, ChevronRight, PenTool, Flower, Flame, Droplets, Sprout } from 'lucide-react';
+import { ChevronLeft, ChevronRight, PenTool, Flower, Flame, Droplets, Sprout, Mail, Settings, Ghost } from 'lucide-react';
 import OfferingBtn from './OfferingBtn';
 import { Grave } from '../App';
 
@@ -11,7 +11,11 @@ interface CemeteryProps {
   onNewGrave: () => void;
   onOffering: (type: 'incense' | 'flowers' | 'wine') => void;
   onCleanWeeds: () => void;
+  onOpenLetter: () => void;
+  onOpenSettings: () => void;
+  onOpenChat: () => void;
   hasWeeds: boolean;
+  isNight: boolean;
 }
 
 const Cemetery: React.FC<CemeteryProps> = ({ 
@@ -22,7 +26,11 @@ const Cemetery: React.FC<CemeteryProps> = ({
   onNewGrave, 
   onOffering,
   onCleanWeeds,
-  hasWeeds
+  onOpenLetter,
+  onOpenSettings,
+  onOpenChat,
+  hasWeeds,
+  isNight
 }) => {
   const currentGrave = graves[currentIdx];
 
@@ -34,38 +42,49 @@ const Cemetery: React.FC<CemeteryProps> = ({
   return (
     <div className="absolute inset-0 z-10 flex flex-col">
       {/* 顶栏 */}
-      <div className="h-16 px-6 flex items-center justify-between border-b border-stone-800/50 backdrop-blur-sm z-30">
-         <button onClick={onBack} className="text-stone-500 hover:text-stone-300 text-xs flex items-center gap-1">
-            <ChevronLeft size={14}/> 返回
-         </button>
-         <button onClick={onNewGrave} className="text-stone-400 hover:text-stone-200 text-xs flex items-center gap-2 border border-stone-800 px-3 py-1 rounded-full">
-            <PenTool size={12}/> 新建立碑
-         </button>
+      <div className="h-24 px-6 md:px-10 flex items-center justify-between border-b border-stone-800/50 backdrop-blur-sm z-30 shrink-0">
+         <div className="flex items-center gap-6">
+           <button onClick={onBack} className="text-stone-500 hover:text-stone-300 text-sm flex items-center gap-2 transition-colors">
+              <ChevronLeft size={18}/> 返回
+           </button>
+           <button onClick={onOpenSettings} className="text-stone-600 hover:text-stone-400 transition-colors p-2" title="设置">
+              <Settings size={18} />
+           </button>
+         </div>
+         
+         <div className="flex items-center gap-4">
+           <button onClick={onOpenChat} className="text-stone-400 hover:text-stone-200 text-xs md:text-sm flex items-center gap-2 border border-stone-800 px-4 py-2 rounded-full bg-stone-900/50 hover:bg-stone-800 transition-colors">
+              <Ghost size={14}/> 找齐默默聊聊
+           </button>
+           <button onClick={onNewGrave} className="text-stone-400 hover:text-stone-200 text-xs md:text-sm flex items-center gap-2 border border-stone-800 px-4 py-2 rounded-full hover:bg-stone-800 transition-colors">
+              <PenTool size={14}/> 新建立碑
+           </button>
+         </div>
       </div>
 
       {/* 核心展示区 */}
-      <div className="flex-1 relative flex items-center justify-center">
+      <div className="flex-1 relative flex items-center justify-center overflow-hidden">
          {/* 切换按钮 */}
-         <button 
+         <button
            disabled={currentIdx === 0}
            onClick={() => setCurrentIdx(c => c - 1)}
-           className="absolute left-4 z-20 p-4 text-stone-600 hover:text-stone-300 disabled:opacity-0 transition-all"
+           className="absolute left-2 md:left-8 z-20 p-4 text-stone-600 hover:text-stone-300 disabled:opacity-0 transition-all"
          >
-            <ChevronLeft size={32}/>
+            <ChevronLeft size={32} className="md:w-12 md:h-12"/>
          </button>
-         <button 
+         <button
            disabled={currentIdx === graves.length - 1}
            onClick={() => setCurrentIdx(c => c + 1)}
-           className="absolute right-4 z-20 p-4 text-stone-600 hover:text-stone-300 disabled:opacity-0 transition-all"
+           className="absolute right-2 md:right-8 z-20 p-4 text-stone-600 hover:text-stone-300 disabled:opacity-0 transition-all"
          >
-            <ChevronRight size={32}/>
+            <ChevronRight size={32} className="md:w-12 md:h-12"/>
          </button>
 
-         {/* 墓碑卡片 */}
-         <div key={currentGrave.id} className="relative w-full h-full max-w-2xl flex flex-col items-center justify-end pb-32 animate-fade-in">
+         {/* 墓碑卡片容器 - 垂直居中 */}
+         <div key={currentGrave.id} className="relative w-full h-full flex flex-col items-center justify-center animate-fade-in pb-20 md:pb-0">
             
-            {/* 墓碑 */}
-            <div className="relative z-10 flex flex-col items-center group">
+            {/* 墓碑主体 */}
+            <div className="relative z-10 flex flex-col items-center group scale-[0.85] md:scale-100 transition-transform duration-500">
                {/* 杂草层 */}
                {hasWeeds && (
                  <div 
@@ -80,7 +99,21 @@ const Cemetery: React.FC<CemeteryProps> = ({
                  </div>
                )}
 
-               <div className="w-80 h-[480px] bg-gradient-to-b from-stone-800 to-stone-900 rounded-t-[120px] border border-stone-700/50 shadow-[0_20px_60px_rgba(0,0,0,0.9)] flex flex-col items-center pt-20 px-8 text-center relative overflow-hidden">
+               {/* 梦境来信 (信封) */}
+               {currentGrave.hasLetter && (
+                 <div 
+                   onClick={onOpenLetter}
+                   className="absolute -right-8 bottom-20 z-50 cursor-pointer animate-bounce hover:scale-110 transition-transform"
+                   title="有一封梦境来信"
+                 >
+                   <div className="relative">
+                     <Mail className="text-stone-300 drop-shadow-[0_0_10px_rgba(255,255,255,0.3)]" size={32} />
+                     <div className="absolute -top-1 -right-1 w-2 h-2 bg-red-500 rounded-full animate-pulse"></div>
+                   </div>
+                 </div>
+               )}
+
+               <div className={`w-80 h-[480px] bg-gradient-to-b from-stone-800 to-stone-900 rounded-t-[120px] border border-stone-700/50 shadow-[0_20px_60px_rgba(0,0,0,0.9)] flex flex-col items-center pt-20 px-8 text-center relative overflow-hidden transition-all duration-1000 ${isNight ? 'shadow-[0_0_30px_rgba(100,100,255,0.1)] border-stone-600/80' : ''}`}>
                   {/* 碑面纹理 */}
                   <div className="absolute inset-0 opacity-30 bg-[url('https://grainy-gradients.vercel.app/noise.svg')] mix-blend-overlay"></div>
                   
@@ -93,7 +126,7 @@ const Cemetery: React.FC<CemeteryProps> = ({
 
                     {/* 中间：墓主姓名 (竖排大字) */}
                     <div className="h-full flex flex-col items-center justify-center">
-                      <h2 className="text-3xl text-stone-200 font-bold font-serif-sc writing-vertical-rl tracking-[0.5em] border-2 border-stone-700/30 py-8 px-4 bg-stone-800/30 shadow-inner">
+                      <h2 className={`text-3xl font-bold font-serif-sc writing-vertical-rl tracking-[0.5em] border-2 border-stone-700/30 py-8 px-4 bg-stone-800/30 shadow-inner transition-colors duration-1000 ${isNight ? 'text-blue-100 drop-shadow-[0_0_8px_rgba(200,200,255,0.5)]' : 'text-stone-200'}`}>
                         {currentGrave.title}之墓
                       </h2>
                     </div>
