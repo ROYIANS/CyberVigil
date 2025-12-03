@@ -1,0 +1,36 @@
+// 备用方案：使用 absarc 的正确画法
+// 如果贝塞尔曲线不够圆润，可以用这个替换
+
+const shape = useMemo(() => {
+  const shape = new THREE.Shape();
+  const width = 2.2;
+  const height = 3.8;
+  const topRadius = width / 2;
+
+  // 从左下角开始
+  shape.moveTo(-width/2, 0);
+  // 左边竖线
+  shape.lineTo(-width/2, height - topRadius);
+
+  // 关键：圆心在 (0, height - topRadius)
+  // 从 PI（左边）到 0（右边），anticlockwise = false（顺时针）
+  // 这会画出一个"凸起"的半圆
+  shape.absarc(
+    0,                    // 圆心 x
+    height - topRadius,   // 圆心 y
+    topRadius,            // 半径
+    Math.PI,              // 起始角度（左边）
+    0,                    // 结束角度（右边）
+    false                 // 顺时针方向
+  );
+
+  // 右边竖线
+  shape.lineTo(width/2, 0);
+  // 底边
+  shape.lineTo(-width/2, 0);
+
+  return shape;
+}, []);
+
+// 或者用另一种方式：从 0 到 PI，逆时针
+// shape.absarc(0, height - topRadius, topRadius, 0, Math.PI, true);
